@@ -19,7 +19,11 @@ import { useRouter } from 'next/navigation'
 import { Progress } from './ui/progress'
 import toast from 'react-hot-toast'
 
-const UploadDropzone = ()=>{
+const UploadDropzone = ({
+  isSubscribed,
+}: {
+  isSubscribed: boolean
+})=>{
  
   const router = useRouter()
 
@@ -29,7 +33,9 @@ const UploadDropzone = ()=>{
     useState<number>(0)
   // const { toast } = useToast()
 
-  const { startUpload } = useUploadThing('pdfUploader')
+  const { startUpload } = useUploadThing(
+    isSubscribed ? 'proPlanUploader' : 'freePlanUploader'
+  )
 
   const { mutate: startPolling } = trpc.getFile.useMutation(
     {
@@ -102,7 +108,7 @@ const UploadDropzone = ()=>{
                   or drag and drop
                 </p>
                 <p className='text-xs text-zinc-500'>
-                  PDF (up to 4MB)
+                  PDF (up to {isSubscribed?"16MB":"4MB"})
                 </p>
               </div>
 
@@ -151,12 +157,12 @@ const UploadDropzone = ()=>{
   )
 }
 
-// const UploadButton = ({
-//   isSubscribed,
-// }: {
-//   isSubscribed: boolean
-// }) 
-const UploadButton = ()=> {
+
+const UploadButton = ({
+  isSubscribed,
+}: {
+  isSubscribed: boolean
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
   return (
@@ -174,8 +180,8 @@ const UploadButton = ()=> {
       </DialogTrigger>
 
       <DialogContent>
-        example content
-        <UploadDropzone />
+       
+        <UploadDropzone isSubscribed={isSubscribed} />
       </DialogContent>
     </Dialog>
   )

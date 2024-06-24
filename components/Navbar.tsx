@@ -1,8 +1,10 @@
 import Link from 'next/link'
 import MaxWidthWrapper from './MaxwidthWrapper'
 import { buttonVariants } from './ui/button'
-import { LoginLink, RegisterLink } from '@kinde-oss/kinde-auth-nextjs/server'
+import { LoginLink, RegisterLink, getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 import { ArrowRight } from 'lucide-react'
+import UserAccountNav from './UserAccountNav'
+import MobileNav from './MobileNav'
 // import { buttonVariants } from './ui/button'
 // import {
 //   LoginLink,
@@ -13,9 +15,9 @@ import { ArrowRight } from 'lucide-react'
 // import UserAccountNav from './UserAccountNav'
 // import MobileNav from './MobileNav'
 
-const Navbar = () => {
-//   const { getUser } = getKindeServerSession()
-//   const user = getUser()
+const Navbar = async() => {
+  const { getUser } = getKindeServerSession()
+  const user = await getUser()
 
   return (
     <nav className='sticky h-14 inset-x-0 top-0 z-30 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all'>
@@ -27,10 +29,10 @@ const Navbar = () => {
             <span>SmartDoc.</span>
           </Link>
 
-          {/* <MobileNav isAuth={!!user} /> */}
+          <MobileNav isAuth={!!user} />
 
           <div className='hidden items-center space-x-4 sm:flex'>
-            
+          {!user ? (
               <>
                 <Link
                   href='/pricing'
@@ -55,7 +57,7 @@ const Navbar = () => {
                   <ArrowRight className='ml-1.5 h-5 w-5' />
                 </RegisterLink> 
               </>
-            {/* ) : (
+             ) : (
               <>
                 <Link
                   href='/dashboard'
@@ -76,7 +78,7 @@ const Navbar = () => {
                   imageUrl={user.picture ?? ''}
                 />
               </>
-            )} */}
+            )} 
           </div>
         </div>
       </MaxWidthWrapper>
